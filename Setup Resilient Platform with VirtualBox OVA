@@ -1,0 +1,88 @@
+**1. Download and install VirtualBox**
+
+If VirtualBox installation fails on a fresh macOS High Sierra 10.13.x due to the new policy Apple introduced around third-party kernel extensions follow this link https://github.com/docksal/docksal/issues/417.
+
+**2. Download the latest redhat OVA file**
+
+http://repository1-01.internal.resilientsystems.com/resilient/rhel/
+login using your W3 ID.
+
+If you can't log in, try logging in freeIPA first https://ipa2.us-cambridge-ma.internal.resilientsystems.com/.
+
+**3. Import the OVA file to the VirtualBox by double clicking on it**
+
+In the VirtualBox Manager open Settings, go to the Network tab:
+- enable adapter 1 to NAT
+- enable adapter 2 to Host-Only
+- click on Advanced, click on Port Forwarding and add the ports shown in the screenshot
+
+![Port Forwarding](https://github.ibm.com/Resilient/resilient-integrations/blob/master/docs/virtualbox_port_forwarding_setup.png)
+
+Add Host Network Manager VirtualBox -> File -> Host Network Manager click on "Create" button.
+
+**4. Download run file**
+
+Note: this step is optional,if your Risilient Version is V30 or later
+
+Download the most current complete build redhat Resilient run file from Jenkins, login to freeIPA first.
+
+https://jenkins.res.swg.usma.ibm.com/job/Co3%20Master/
+
+Find build history bottom left and click on the latest green successful build and download the run file "	redhat/resilient-Version.Patch.Build.run" to you to your Downloads folder.
+
+**5. Start the VM**
+
+In the VirtualBox Manager click on big green "Start" button.
+
+**6. In VM bash login to Resilient**
+
+Login using username and password resadmin/password
+
+**7. Set up the virtual environment**
+
+- Download developer-license.key to your Downloads folder
+
+Either pull the master branch from Resilient main core "shared -> developer-license.key" or ask someone else to download it for you.
+
+Open local Terminal and run:
+
+`scp -P 3022 ~/Downloads/developer-license.key resadmin@[resilient host ip]:license.key`
+
+then import the license:
+
+`sudo license-import -file license.key`
+
+After then, verify the license key by:
+
+`sudo resutil license`
+
+
+
+
+**8. Create a new Resilient account**
+
+
+
+`resutil neworg -name resilient`
+
+`resutil newuser -email 'a@a.com' -password 'Passw0rd' -org 'resilient'`
+
+**9. Open Firefox and log in Resilient**
+
+https://localhost:1443/ and log in using username and password a@a.com/Passw0rd
+
+**10. See logs**
+
+`view /var/log/resilient-scripting` (hint - quit :q)
+logs associated with system
+
+`view /usr/share/co3/logs`
+client logs
+
+**10. Shutdown your VM and make a snapshot** 
+
+You need a snapshot so you can always revert to a clean environment. 
+
+In VirtualBox Manager right click on your VM Go to Close -> ACPI Shutdown. 
+
+Make a snapshot clicking on Machine Tools -> Snapshots click on "Take" button.
